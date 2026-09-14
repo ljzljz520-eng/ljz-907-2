@@ -1,52 +1,39 @@
 <?php
 /**
- * 命令行种子脚本：导入示例 CSV 并关联种子剧照
+ * 命令行种子脚本：导入示例 CSV（含封面与剧照关联）
  * 用法: php tools/seed.php
  */
 require_once dirname(__DIR__) . '/includes/db.php';
+require_once dirname(__DIR__) . '/includes/importer.php';
 
-$pdo = db();
+$pdo     = db();
 $csvFile = dirname(__DIR__) . '/sample_data/plays_sample.csv';
+if (!is_file($csvFile)) {
+    fwrite(STDERR, "找不到示例 CSV：{$csvFile}\n");
+    exit(1);
+}
 $rows = array_map('str_getcsv', file($csvFile));
-$header = array_shift($rows);
 
-// slug 映射（标题 → 种子图文件名前缀）
-$slugs = [
-    '牡丹亭'=>'mudanting','长生殿'=>'changshengdian','霸王别姬'=>'bawangbieji',
-    '贵妃醉酒'=>'guifeizuijiu','红楼梦'=>'hongloumeng','梁山伯与祝英台'=>'liangzhu',
-    '天仙配'=>'tianxianpei','女驸马'=>'nvfuma','花木兰'=>'huamulan','穆桂英挂帅'=>'muguiying',
-    '白蛇传'=>'baishezhuan','芙蓉花仙'=>'furonghuaxian','帝女花'=>'dinvhua',
-    '紫钗记'=>'zichaiji','花为媒'=>'huaweimei','秦香莲'=>'qinxianglian',
-    '三滴血'=>'sandixue','刘海砍樵'=>'liuhaikanqiao',
-];
-
-$typeStmt = $pdo->prepare('SELECT id FROM opera_types WHERE name = ?');
-$typeIns  = $pdo->prepare('INSERT INTO opera_types (name, region) VALUES (?, ?)');
-$playIns  = $pdo->prepare('INSERT INTO plays (title, type_id, region, inheritor, actors, era, video_url, description, cover)
-                           VALUES (?,?,?,?,?,?,?,?,?)');
-$imgIns   = $pdo->prepare('INSERT INTO play_images (play_id, image_path, sort_order) VALUES (?,?,?)');
+// 跳过表头、过滤空行
+$header = $rows[0] ?? [];
+if (mb_strpos($header[0] ?? '', '剧目') !== false || stripos($header[0] ?? '', 'title') !== false) {
+    array_shift($rows);
+}
+$rows = array_values(array_filter($rows, fn($r) =>
+    count(array_filter($r, fn($v) => trim((string)$v) !== '')) > 0
+));
 
 $pdo->beginTransaction();
-$count = 0;
-foreach ($rows as $row) {
-    $row = array_pad(array_map('trim', $row), 8, '');
-    [$title, $typeName, $region, $inheritor, $actors, $era, $videoUrl, $desc] = $row;
-    if ($title === '' || $typeName === '') continue;
-
-    $typeStmt->execute([$typeName]);
-    $typeId = $typeStmt->fetchColumn();
-    if (!$typeId) {
-        $typeIns->execute([$typeName, $region]);
-        $typeId = (int)$pdo->lastInsertId();
-    }
-    $slug  = $slugs[$title] ?? null;
-    $cover = $slug ? "seed/{$slug}_1.svg" : '';
-    $playIns->execute([$title, $typeId, $region, $inheritor, $actors, $era, $videoUrl, $desc, $cover]);
-    $playId = (int)$pdo->lastInsertId();
-    if ($slug) {
-        $imgIns->execute([$playId, "seed/{$slug}_2.svg", 0]);
-    }
-    $count++;
+try {
+    $result = import_play_rows($pdo, $rows, 1);
+    $pdo->commit();
+} catch (Throwable $ex) {
+    $pdo->rollBack();
+    fwrite(STDERR, "导入失败：{$ex->getMessage()}（已回滚）\n");
+    exit(1);
 }
-$pdo->commit();
-echo "已导入 {$count} 条剧目种子数据\n";
+
+echo "种子数据导入完成：新增 {$result['inserted']} 条，更新 {$result['updated']} 条，跳过 " . count($result['skipped']) . " 条\n";
+foreach (array_merge($result['skipped'], $result['warnings']) as $msg) {
+    echo "  - {$msg}\n";
+}
