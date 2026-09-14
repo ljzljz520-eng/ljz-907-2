@@ -1,0 +1,5 @@
+# 上传文件（保留种子图与目录结构）
+uploads/*
+!uploads/seed/
+!uploads/.htaccess
+!uploads/index.html

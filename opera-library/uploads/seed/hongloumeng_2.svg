@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#8c2b45"/><stop offset="1" stop-color="#8c2b45cc"/>
+  </linearGradient></defs>
+  <rect width="800" height="600" fill="url(#g)"/>
+  <circle cx="400" cy="260" r="130" fill="none" stroke="#e8cfa8" stroke-width="4" opacity="0.8"/>
+  <text x="400" y="290" font-size="72" text-anchor="middle" fill="#f5e6c8" font-family="KaiTi,STKaiti,serif" font-weight="bold">红楼梦</text>
+  <text x="400" y="480" font-size="28" text-anchor="middle" fill="#e0c9a0" font-family="KaiTi,STKaiti,serif">·剧照2地方戏曲影像库</text>
+</svg>

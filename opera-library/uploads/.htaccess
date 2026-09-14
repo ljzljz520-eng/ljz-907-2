@@ -1,0 +1,8 @@
+# 禁止在 uploads 目录执行脚本，防止上传漏洞
+<IfModule mod_php.c>
+  php_flag engine off
+</IfModule>
+<FilesMatch "\.(php|phtml|phar|cgi|pl|py|sh)$">
+  Require all denied
+</FilesMatch>
+Options -Indexes

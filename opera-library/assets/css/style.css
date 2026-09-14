@@ -1,0 +1,132 @@
+/* ===== 地方戏曲影像库 前台样式 ===== */
+:root {
+  --c-primary: #9c2b2e;      /* 戏曲红 */
+  --c-primary-dark: #7a1f22;
+  --c-ink: #2b2b2b;
+  --c-muted: #8a8a8a;
+  --c-bg: #f7f3ec;           /* 宣纸色 */
+  --c-card: #ffffff;
+  --c-border: #e5ddd0;
+  --radius: 10px;
+  --shadow: 0 2px 10px rgba(60, 40, 20, .08);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+  background: var(--c-bg); color: var(--c-ink); line-height: 1.7;
+}
+a { color: var(--c-primary); text-decoration: none; }
+a:hover { color: var(--c-primary-dark); }
+.container { max-width: 1180px; margin: 0 auto; padding: 0 20px; }
+.muted { color: var(--c-muted); }
+.center { text-align: center; }
+
+/* 头部 */
+.site-header {
+  background: linear-gradient(135deg, #8c2326, #6d1a1d);
+  color: #fff; padding: 22px 0 0; margin-bottom: 28px;
+  border-bottom: 4px solid #c9a063;
+}
+.header-inner { display: flex; justify-content: space-between; align-items: center; }
+.logo { display: flex; align-items: center; gap: 12px; color: #fff; }
+.logo-mark {
+  width: 46px; height: 46px; border-radius: 8px; background: #c9a063; color: #6d1a1d;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 26px; font-weight: 700; font-family: "KaiTi", "STKaiti", serif;
+}
+.logo-text { font-size: 24px; font-weight: 700; letter-spacing: 2px; font-family: "KaiTi", "STKaiti", serif; }
+.site-nav a { color: #f3e2c7; margin-left: 22px; font-size: 15px; }
+.site-nav a:hover { color: #fff; }
+.site-tagline { text-align: center; color: #e8cfa8; font-size: 13px; padding: 12px 0 10px; letter-spacing: 3px; }
+
+/* 筛选面板 */
+.filter-panel {
+  background: var(--c-card); border: 1px solid var(--c-border);
+  border-radius: var(--radius); padding: 18px 20px; margin-bottom: 24px; box-shadow: var(--shadow);
+}
+.filter-row { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-end; }
+.filter-row label { display: flex; flex-direction: column; font-size: 13px; color: var(--c-muted); gap: 5px; }
+.filter-row select, .filter-row input {
+  padding: 8px 12px; border: 1px solid var(--c-border); border-radius: 6px;
+  font-size: 14px; min-width: 140px; background: #fff; color: var(--c-ink);
+}
+.filter-actions { display: flex; gap: 8px; }
+
+/* 按钮 */
+.btn {
+  display: inline-block; padding: 8px 18px; border-radius: 6px; font-size: 14px;
+  border: 1px solid transparent; cursor: pointer; transition: all .15s;
+}
+.btn-primary { background: var(--c-primary); color: #fff; }
+.btn-primary:hover { background: var(--c-primary-dark); color: #fff; }
+.btn-ghost { border-color: var(--c-border); color: var(--c-muted); background: #fff; }
+.btn-ghost:hover { color: var(--c-primary); border-color: var(--c-primary); }
+
+/* 剧目卡片网格 */
+.play-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 22px; margin-bottom: 28px;
+}
+.play-card {
+  background: var(--c-card); border-radius: var(--radius); overflow: hidden;
+  border: 1px solid var(--c-border); box-shadow: var(--shadow);
+  transition: transform .18s, box-shadow .18s; display: block; color: var(--c-ink);
+}
+.play-card:hover { transform: translateY(-4px); box-shadow: 0 8px 22px rgba(60,40,20,.15); color: var(--c-ink); }
+.play-cover { position: relative; aspect-ratio: 4/3; background: #efe7d8; overflow: hidden; }
+.play-cover img { width: 100%; height: 100%; object-fit: cover; }
+.play-type {
+  position: absolute; top: 10px; left: 10px; background: rgba(140, 35, 38, .92);
+  color: #fff; font-size: 12px; padding: 3px 10px; border-radius: 20px; letter-spacing: 1px;
+}
+.play-info { padding: 14px 16px 16px; }
+.play-info h3 { font-size: 17px; margin-bottom: 6px; font-family: "KaiTi", "STKaiti", serif; }
+.play-meta { font-size: 13px; display: flex; flex-wrap: wrap; gap: 4px 14px; }
+.play-meta.muted { font-size: 12px; }
+
+/* 分页 */
+.pagination { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: center; margin: 10px 0 40px; }
+.page-btn {
+  min-width: 38px; height: 38px; padding: 0 12px; display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid var(--c-border); border-radius: 6px; background: #fff; font-size: 14px; color: var(--c-ink);
+}
+.page-btn:hover { border-color: var(--c-primary); color: var(--c-primary); }
+.page-btn.current { background: var(--c-primary); border-color: var(--c-primary); color: #fff; }
+.page-btn.disabled { color: #ccc; pointer-events: none; }
+.page-dots { color: var(--c-muted); }
+.page-total { font-size: 13px; color: var(--c-muted); margin-left: 10px; }
+
+/* 空状态 */
+.empty-state { text-align: center; padding: 70px 20px; background: var(--c-card); border-radius: var(--radius); border: 1px dashed var(--c-border); }
+.empty-state p:first-child { font-size: 20px; margin-bottom: 8px; }
+
+/* 详情页 */
+.breadcrumb { font-size: 13px; color: var(--c-muted); margin-bottom: 18px; }
+.breadcrumb span { color: var(--c-ink); }
+.play-detail { background: var(--c-card); border: 1px solid var(--c-border); border-radius: var(--radius); padding: 26px; box-shadow: var(--shadow); }
+.detail-main { display: grid; grid-template-columns: 360px 1fr; gap: 28px; }
+.detail-cover img { width: 100%; border-radius: 8px; border: 1px solid var(--c-border); }
+.detail-info h1 { font-size: 30px; font-family: "KaiTi", "STKaiti", serif; margin-bottom: 16px; }
+.info-table { width: 100%; border-collapse: collapse; font-size: 15px; }
+.info-table th, .info-table td { padding: 9px 12px; border-bottom: 1px solid #f0e9dc; text-align: left; }
+.info-table th { width: 100px; color: var(--c-muted); font-weight: normal; }
+.detail-section { margin-top: 28px; }
+.detail-section h2, .related-section h2 {
+  font-size: 20px; font-family: "KaiTi", "STKaiti", serif;
+  border-left: 4px solid var(--c-primary); padding-left: 12px; margin-bottom: 16px;
+}
+.video-box { max-width: 860px; }
+.description { color: #444; }
+.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; }
+.gallery img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 8px; border: 1px solid var(--c-border); transition: transform .15s; }
+.gallery img:hover { transform: scale(1.03); }
+.related-section { margin: 34px 0 40px; }
+
+/* 页脚 */
+.site-footer { border-top: 1px solid var(--c-border); padding: 26px 0; text-align: center; font-size: 13px; color: var(--c-muted); background: #f2ece1; }
+
+@media (max-width: 760px) {
+  .detail-main { grid-template-columns: 1fr; }
+  .header-inner { flex-direction: column; gap: 10px; }
+  .site-nav a { margin: 0 10px; }
+}
